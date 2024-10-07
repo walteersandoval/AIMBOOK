@@ -1,0 +1,50 @@
+{
+  "name": "AIMBook",
+  "short_name": "Lectura",
+  "description": "Aplicación para gestionar objetivos de lectura, progreso semanal y notas de libros.",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Nuevo Libro",
+      "short_name": "Libro",
+      "description": "Agregar un nuevo libro",
+      "url": "/index.html#notas",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ver Progreso",
+      "short_name": "Progreso",
+      "description": "Ver tu progreso semanal y mensual",
+      "url": "/index.html#progreso",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objetivos de Lectura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="/manifest.json">
+
+  <style>
+    /* Mejores prácticas de UX y UI aplicadas a la interfaz */
+    /* Estilos generales */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f8fc;
+      color: #333;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px;
+      text-align: center;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab {
+      padding: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .tab.active {
+      border-bottom: 3px solid #4f46e5;
+      color: #4f46e5;
+    }
+
+    .tab-content {
+      display: none;
+      text-align: center;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Temporizador */
+    .timer {
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .circle {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background-color: #f0f0f5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .svg-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-45%, -54%) rotate(-90deg);
+    }
+
+    .circle-background,
+    .circle-progress {
+      fill: none;
+      stroke-width: 12;
+    }
+
+    .circle-background {
+      stroke: #e0e0e0;
+    }
+
+    .circle-progress {
+      stroke: #34d399;
+      stroke-dasharray: 690;
+      stroke-dashoffset: 690;
+      transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;
+    }
+
+    .time {
+      font-size: 48px;
+      font-weight: 700;
+      z-index: 1;
+    }
+
+    /* Progreso */
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background-color: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      background-color: #34d399;
+      transition: width 0.5s ease, background-color 0.5s ease;
+    }
+
+    /* Botones de acciones */
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .primary-button, .secondary-button {
+      padding: 14px 24px;
+      border-radius: 25px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .primary-button {
+      background-color: #4f46e5;
+      color: #fff;
+    }
+
+    .primary-button:hover {
+      background-color: #3730a3;
+      transform: scale(1.05);
+    }
+
+    .secondary-button {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      color: #000;
+    }
+
+    .secondary-button:hover {
+      transform: scale(1.05);
+    }
+
+    /* Progreso */
+    .progress-overview {
+      margin-top: 40px;
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .progress-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0077cc;
+      margin-top: 5px;
+    }
+
+    /* Formularios */
+    .form-group input, .form-select, #book-form, #note-form {
+        max-width: 500px;
+        margin: 0 auto;
+        width: -webkit-fill-available;
+        padding: 14px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #fff;
+        color: #333;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+    }
+
+    textarea {
+        width: -webkit-fill-available;
+        max-width: 500px;
+        padding: 14px;
+        margin: 12px auto;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        resize: none;
+        background-color: #fff;
+        color: #333;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Botón principal */
+    .btn {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 20px;
+      padding: 14px;
+      background-color: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      display: block;
+    }
+
+    .btn:hover {
+      background-color: #3730a3;
+      transform: scale(1.05);
+    }
+
+    /* Historial */
+    .history-entry {
+      background-color: #fff7b2; /* Color similar al de una nota adhesiva */
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-left: 6px solid #ffd700; /* Borde que asemeja una nota importante */
+    }
+
+    .history-entry p {
+      margin: 8px 0;
+    }
+
+
+    /* Notificación emergente */
+    .notification {
+      position: fixed;
+      top: 10px;
+      right: 1%;
+      transform: translateX(50%);
+      background-color: #f44336;
+      color: #fff;
+      padding: 15px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 16px;
+      font-weight: 500;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+      width: 92%;
+    }
+
+    /* Mostrar notificación */
+    .notification.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Botón de eliminar */
+    .delete-session-btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #ff4d4d;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .delete-session-btn:hover {
+      background-color: #d93636;
+      transform: scale(1.05);
+    }
+
+    .goal-time-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #4f46e5, #34d399);
+      outline: none;
+      transition: background 0.3s ease;
+    }
+
+    .goal-time-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .goal-time-slider::-webkit-slider-thumb:hover {
+      background: #3730a3;
+      transform: scale(1.1);
+    }
+
+    .goal-time-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .goal-time-slider::-moz-range-thumb:hover {
+      background: #3730a3;
+      transform: scale(1.1);
+    }
+
+    .copy-btn {
+      background-color: #4f46e5;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .copy-btn:hover {
+      background-color: #3730a3;
+    }
+
+    /* Estilo general del select */
+    select {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #999; /* Color del texto por defecto */
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="0,0 20,0 10,10" fill="%234f46e5"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Estilo cuando no está seleccionada la opción por defecto */
+    select:not(:placeholder-shown) {
+      color: #333; /* Color normal del texto de las opciones */
+    }
+
+    /* Efectos de interacción */
+    select:hover {
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.2);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+    }
+    .title-container {
+      display: flex;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 20px;
+    }
+
+    /* Estilo para el título principal */
+    .title-container h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-right: 5px; /* Reduce el espacio entre el título y la subtext */
+    }
+
+    /* Estilo para el subtítulo */
+    .title-container .subtext {
+      font-size: 18px;
+      font-weight: 500;
+      color: #4f46e5; /* Color del subtítulo */
+      letter-spacing: 0.5px;
+    }
+
+    /* Línea vertical entre el título y el subtítulo */
+    .title-container .subtext::before {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 20px;
+      background-color: #ccc;
+      margin-right: 5px; /* Reduce el margen entre la línea y el subtítulo */
+      vertical-align: middle;
+    }
+
+    /* Media Queries para pantallas móviles */
+    @media screen and (max-width: 768px) {
+      /* Cambia la dirección de los elementos a vertical en móviles */
+      .title-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .title-container h1 {
+        font-size: 24px;
+        margin-right: 0;
+      }
+
+      .title-container .subtext {
+        margin-top: 5px; /* Añade espacio en móviles entre el título y el subtítulo */
+      }
+
+      .title-container .subtext::before {
+        display: none; /* Oculta la línea vertical en móviles */
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="title-container">
+      <h1>AIMBOOK</h1>
+      <span class="subtext">|Apunta al Conocimiento</span>
+  </div>
+  <div class="container">
+   
+    <!-- Contenedor de pestañas -->
+    <div class="tabs">
+      <div class="tab active" data-tab="libros">Libros</div>
+      <div class="tab" data-tab="progreso">Progreso</div>
+      <div class="tab" data-tab="notas">Notas</div>
+    </div>
+
+    <!-- Contenido de la pestaña Libros -->
+    <div id="libros" class="tab-content active">
+      <h2>Objetivos de lectura</h2>
+      <p>Lee todos los días, sube tus estadísticas y termina más libros.</p>
+      <section class="reading-goal">
+        <div class="timer">
+          <div class="circle">
+            <svg class="svg-circle">
+              <circle class="circle-background" cx="100" cy="100" r="95"></circle>
+              <circle class="circle-progress" cx="100" cy="100" r="95"></circle>
+            </svg>
+            <span class="time" id="time-display">0:00</span>
+          </div>
+          <p>Selecciona un libro para empezar</p>
+          <p class="objective-text">de tu objetivo de <span id="reading-goal-time">30</span> min</p>
+          <p class="remaining" id="remaining-time">30 minutos restantes</p>
+          <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="primary-button" id="start-timer-btn">Iniciar lectura</button>
+          <button class="secondary-button" id="stop-timer-btn" disabled>Pausar lectura</button>
+        </div>
+      </section>
+      <section class="goal-time-container">
+        <h3>Establece tu objetivo diario</h3>
+        <input type="range" min="10" max="120" value="30" class="goal-time-slider" id="goal-time-slider">
+        <p>Objetivo diario: <span class="goal-time-display" id="goal-time-display">30</span> minutos</p>
+      </section>
+    </div>
+
+    <!-- Contenido de la pestaña Progreso -->
+    <div id="progreso" class="tab-content">
+       <button onclick="resetApp()" class="secondary-button">Restablecer App</button>
+      <h2>Progreso Semanal y Mensual</h2>
+      <section class="progress-overview">
+        <h3>Progreso Semanal</h3>
+        <p>Total leído esta semana:</p>
+        <p class="progress-value" id="weekly-progress">0</p>
+        <p>Objetivo semanal: <span id="weekly-goal">210</span> minutos</p>
+      </section>
+      <section class="progress-overview">
+        <h3>Progreso Mensual</h3>
+        <p>Total leído este mes:</p>
+        <p class="progress-value" id="monthly-progress">0</p>
+        <p>Objetivo mensual: <span id="monthly-goal">900</span> minutos</p>
+      </section>
+     
+
+       <h2>Historial de Sesiones de Lectura</h2>
+      <section class="reading-history">
+           <div id="reading-history-list">
+    <!-- Aquí se agregarán dinámicamente las sesiones de lectura -->
+  </div>
+    </div>
+
+    <!-- Contenido de la pestaña Notas -->
+    <div id="notas" class="tab-content">
+
+        <h3>Agregar Nuevo Libro</h3>
+        <form id="book-form" class="form">
+          <div class="form-group">
+            <input type="text" id="book-title" placeholder="Título del libro" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="book-author" placeholder="Autor del libro" required>
+          </div>
+          <button type="submit" class="btn">Agregar Libro</button>
+        </form>
+        <h3>Libros Disponibles</h3>
+      <select id="book-selector" class="form-select">
+        <option value="" selected>Selecciona un libro</option>
+        <!-- Aquí se agregarán dinámicamente los libros -->
+      </select>
+
+      </section>
+
+      <section class="book-notes-section">
+        <h3>Reseñas y Notas del Libro</h3>
+        <form id="note-form">
+          <div class="form-group">
+            <textarea id="book-note" rows="4" placeholder="Escribe tus pensamientos sobre este libro..."></textarea>
+          </div>
+          <button type="submit" class="btn">Guardar Nota</button>
+        </form>
+        <h3>Notas guardadas</h3>
+        <div id="notes-display">
+          <p>No hay notas guardadas para este libro.</p>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <script>
+    // Script para cambiar entre pestañas
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+
+        // Agregar vibración al cambiar de pestaña
+        if (navigator.vibrate) {
+          navigator.vibrate(100); // Vibración de 100 milisegundos
+        }
+      });
+    });
+
+    // Variables principales para el temporizador y objetivo
+    let timeElapsed = 0; // Tiempo transcurrido en segundos
+    let timerInterval = null;
+    let readingGoalTime = 30; // Objetivo diario por defecto en minutos
+    let selectedBook = null;
+    let isTimerRunning = false; // Variable para controlar si el temporizador está en ejecución
+
+    let booksData = {}; // Objeto para almacenar los libros, sus sesiones y notas
+
+    let weeklyProgress = 0; // Progreso semanal en minutos
+    let monthlyProgress = 0; // Progreso mensual en minutos
+
+    const weeklyGoal = 210; // Objetivo semanal en minutos (ejemplo: 210 minutos)
+    const monthlyGoal = 900; // Objetivo mensual en minutos (ejemplo: 900 minutos)
+
+    const timeDisplay = document.getElementById('time-display');
+    const remainingTimeDisplay = document.getElementById('remaining-time');
+    const progressElement = document.getElementById('progress');
+    const circleProgress = document.querySelector('.circle-progress');
+    const startTimerBtn = document.getElementById('start-timer-btn');
+    const stopTimerBtn = document.getElementById('stop-timer-btn');
+    const goalTimeSlider = document.getElementById('goal-time-slider');
+    const goalTimeDisplay = document.getElementById('goal-time-display');
+    const bookSelector = document.getElementById('book-selector');
+
+    // Progreso semanal y mensual en la interfaz
+    const weeklyProgressElement = document.getElementById('weekly-progress');
+    const monthlyProgressElement = document.getElementById('monthly-progress');
+
+    // Elemento del historial de sesiones de lectura
+    const readingHistoryElement = document.getElementById('reading-history-list');
+
+    // Elementos para manejar las notas
+    const noteForm = document.getElementById('note-form');
+    const noteTextarea = document.getElementById('book-note');
+    const notesDisplay = document.getElementById('notes-display');
+
+    // Sonido de notificación
+    const notificationSound = new Audio('path-to-your-sound-file.mp3'); // Ruta del archivo de sonido
+
+    // Cargar datos desde LocalStorage al iniciar
+    window.addEventListener('load', loadFromLocalStorage);
+
+    // Actualizar el objetivo de tiempo de lectura
+    goalTimeSlider.addEventListener('input', (e) => {
+      readingGoalTime = parseInt(e.target.value, 10);
+      goalTimeDisplay.textContent = readingGoalTime;
+      remainingTimeDisplay.textContent = `${readingGoalTime} minutos restantes`;
+
+      // Solo actualizar el progreso si el temporizador está activo
+      if (isTimerRunning) {
+        updateProgress();
+      }
+
+      saveToLocalStorage(); // Guardar cada vez que cambia el objetivo de tiempo
+    });
+
+    // Iniciar el temporizador de lectura solo si hay un libro seleccionado
+    startTimerBtn.addEventListener('click', () => {
+      selectedBook = bookSelector.value; // Obtener el valor del libro seleccionado
+      if (!selectedBook || selectedBook === "") {
+        showNotification('Por favor selecciona un libro antes de iniciar el temporizador.');
+        return;
+      }
+      startTimer();
+      startTimerBtn.disabled = true;
+      stopTimerBtn.disabled = false;
+      isTimerRunning = true; // Marcar que el temporizador está en ejecución
+
+      // Vibrar al iniciar el temporizador
+      if (navigator.vibrate) {
+        navigator.vibrate(200); // Vibración de 200 milisegundos
+      }
+
+      // Cambiar el color del progreso a verde al iniciar
+      progressElement.style.backgroundColor = '#34d399';
+      circleProgress.style.stroke = '#34d399';
+    });
+
+    // Pausar el temporizador de lectura
+    stopTimerBtn.addEventListener('click', () => {
+      stopTimer();
+      startTimerBtn.disabled = false;
+      stopTimerBtn.disabled = true;
+      isTimerRunning = false; // Marcar que el temporizador se ha detenido
+
+      // Vibrar al pausar el temporizador
+      if (navigator.vibrate) {
+        navigator.vibrate([100, 100, 100]); // Vibración en patrón
+      }
+
+      // Cambiar el color del progreso a naranja al pausar
+      progressElement.style.backgroundColor = '#f59e0b';
+      circleProgress.style.stroke = '#f59e0b';
+    });
+
+    function startTimer() {
+      const totalGoalTimeSeconds = readingGoalTime * 60;
+
+      timerInterval = setInterval(() => {
+        timeElapsed++;
+        const remainingSeconds = totalGoalTimeSeconds - timeElapsed;
+
+        const minutesRemaining = Math.floor(remainingSeconds / 60);
+        const secondsRemaining = remainingSeconds % 60;
+        const minutesElapsed = Math.floor(timeElapsed / 60);
+        const secondsElapsed = timeElapsed % 60;
+
+        timeDisplay.textContent = `${minutesElapsed}:${secondsElapsed < 10 ? '0' : ''}${secondsElapsed}`;
+        remainingTimeDisplay.textContent = `${minutesRemaining} minutos restantes`;
+
+        updateProgress();
+
+        if (remainingSeconds <= 0) {
+          completeGoal();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      recordReadingSession(timeElapsed / 60); // Registrar la sesión cuando se pausa el temporizador
+      timeElapsed = 0; // Reiniciar el temporizador
+    }
+
+    function updateProgress() {
+      if (!isTimerRunning) {
+        return; // No actualizar el progreso si el temporizador no está en ejecución
+      }
+
+      const progressPercentage = timeElapsed / (readingGoalTime * 60);
+
+      // Asegurarse de que el progreso no supere el 100%
+      const clampedProgress = Math.min(progressPercentage, 1);
+
+      progressElement.style.width = `${clampedProgress * 100}%`;
+      const dashOffset = 690 * (1 - clampedProgress);
+      circleProgress.style.strokeDashoffset = dashOffset;
+    }
+
+    // Función para completar el objetivo diario
+    function completeGoal() {
+      clearInterval(timerInterval);
+      alert('¡Felicidades! Has completado tu objetivo de lectura.');
+      recordReadingSession(readingGoalTime); // Registrar el tiempo completo
+      timeElapsed = 0;
+      timeDisplay.textContent = '0:00';
+      remainingTimeDisplay.textContent = `${readingGoalTime} minutos restantes`;
+      progressElement.style.width = '0%';
+
+      // Reproducir sonido y vibrar al completar el objetivo
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]); // Patrón de vibración
+      }
+      notificationSound.play(); // Reproducir el tono de notificación
+    }
+
+    // Función para registrar la sesión de lectura y actualizar el progreso semanal y mensual
+    function recordReadingSession(minutes) {
+      weeklyProgress += minutes;
+      monthlyProgress += minutes;
+
+      // Actualizar el progreso semanal y mensual en la interfaz
+      weeklyProgressElement.textContent = weeklyProgress.toFixed(2);
+      monthlyProgressElement.textContent = monthlyProgress.toFixed(2);
+
+      if (weeklyProgress >= weeklyGoal) {
+        weeklyProgressElement.classList.add('complete');
+      }
+      if (monthlyProgress >= monthlyGoal) {
+        monthlyProgressElement.classList.add('complete');
+      }
+
+      // Registrar la sesión en el historial del libro seleccionado
+      if (!booksData[selectedBook]) {
+        booksData[selectedBook] = {
+          sessions: [],
+          notes: []
+        };
+      }
+
+      booksData[selectedBook].sessions.push({
+        duration: minutes.toFixed(2),
+        date: new Date().toLocaleString()
+      });
+
+      // Guardar los datos en LocalStorage
+      saveToLocalStorage();
+
+      // Mostrar el historial actualizado del libro
+      showBookSessions(selectedBook);
+    }
+
+    // Función para mostrar el historial del libro seleccionado
+    function showBookSessions(bookTitle) {
+      readingHistoryElement.innerHTML = ''; // Limpiar el historial actual
+
+      if (booksData[bookTitle] && booksData[bookTitle].sessions.length > 0) {
+        booksData[bookTitle].sessions.forEach((session, index) => {
+          const sessionEntry = document.createElement('div');
+          sessionEntry.classList.add('history-entry');
+          sessionEntry.innerHTML = `
+            <p><strong>Duración:</strong> ${session.duration} minutos</p>
+            <p><strong>Fecha:</strong> ${session.date}</p>
+            <button class="delete-session-btn" data-index="${index}">Eliminar</button>
+          `;
+          readingHistoryElement.appendChild(sessionEntry);
+
+          // Agregar funcionalidad al botón "Eliminar"
+          sessionEntry.querySelector('.delete-session-btn').addEventListener('click', () => {
+            deleteSession(bookTitle, index);
+          });
+        });
+      } else {
+        readingHistoryElement.innerHTML = '<p>No hay sesiones para este libro.</p>';
+      }
+
+      showBookNotes(bookTitle); // Actualizar las notas del libro seleccionado
+    }
+
+    // Función para eliminar una sesión del libro seleccionado
+    function deleteSession(bookTitle, sessionIndex) {
+      booksData[bookTitle].sessions.splice(sessionIndex, 1); // Eliminar la sesión del array
+      saveToLocalStorage(); // Guardar cambios en LocalStorage
+      showBookSessions(bookTitle); // Actualizar la vista del historial
+    }
+
+    // Función para mostrar las notas del libro seleccionado
+    function showBookNotes(bookTitle) {
+      notesDisplay.innerHTML = ''; // Limpiar el área de notas
+
+      if (booksData[bookTitle] && booksData[bookTitle].notes.length > 0) {
+        booksData[bookTitle].notes.forEach(note => {
+          const noteEntry = document.createElement('div');
+          noteEntry.classList.add('history-entry');
+          noteEntry.innerHTML = `
+            <p><strong>Libro:</strong> ${bookTitle}</p>
+            <p><strong>Autor:</strong> ${bookSelector.options[bookSelector.selectedIndex].text.split(' - ')[1]}</p>
+            <p><strong>Fecha:</strong> ${note.date}</p>
+            <p><strong>Nota:</strong> ${note.text}</p>
+
+            <!-- Botón para copiar al portapapeles -->
+            <button class="share-btn copy-btn" onclick="copyNoteToClipboard('${bookTitle}', '${bookSelector.options[bookSelector.selectedIndex].text.split(' - ')[1]}', '${note.text}')">Copiar Información</button>
+          `;
+          notesDisplay.appendChild(noteEntry);
+        });
+      } else {
+        notesDisplay.innerHTML = '<p>No hay notas guardadas para este libro.</p>';
+      }
+    }
+
+
+    // Cambiar el libro seleccionado y mostrar su historial
+    bookSelector.addEventListener('change', (e) => {
+      selectedBook = e.target.value;
+      if (selectedBook && selectedBook !== "") {
+        showBookSessions(selectedBook);
+        startTimerBtn.disabled = false;
+      } else {
+        startTimerBtn.disabled = true;
+      }
+    });
+
+    // Agregar nuevo libro
+    const bookForm = document.getElementById('book-form');
+    const bookTitleInput = document.getElementById('book-title');
+    const bookAuthorInput = document.getElementById('book-author');
+
+    bookForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bookTitle = bookTitleInput.value.trim();
+      const bookAuthor = bookAuthorInput.value.trim();
+
+      if (bookTitle === '' || bookAuthor === '') {
+        alert('Por favor ingresa el título y autor del libro.');
+        return;
+      }
+
+      const option = document.createElement('option');
+      option.value = bookTitle;
+      option.textContent = `${bookTitle} - ${bookAuthor}`;
+      bookSelector.appendChild(option);
+
+      bookTitleInput.value = '';
+      bookAuthorInput.value = '';
+
+      booksData[bookTitle] = {
+        sessions: [],
+        notes: []
+      };
+
+      // Guardar los datos en LocalStorage
+      saveToLocalStorage();
+    });
+
+    // Guardar notas
+    noteForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const note = noteTextarea.value.trim();
+      const currentDate = new Date().toLocaleString();
+
+      if (note === '') {
+        alert('Por favor escribe una nota.');
+        return;
+      }
+
+      if (!booksData[selectedBook]) {
+        booksData[selectedBook] = {
+          sessions: [],
+          notes: []
+        };
+      }
+
+      booksData[selectedBook].notes.push({
+        text: note,
+        date: currentDate
+      });
+
+      // Mostrar las notas actualizadas del libro
+      showBookNotes(selectedBook);
+
+      noteTextarea.value = ''; // Limpiar el textarea
+
+      // Guardar los datos en LocalStorage
+      saveToLocalStorage();
+    });
+
+    // Guardar datos en LocalStorage
+    function saveToLocalStorage() {
+      localStorage.setItem('booksData', JSON.stringify(booksData));
+      localStorage.setItem('weeklyProgress', weeklyProgress);
+      localStorage.setItem('monthlyProgress', monthlyProgress);
+    }
+    // Función para resetear la PWA y eliminar todos los datos del localStorage
+    function resetApp() {
+      // Eliminar todos los datos del localStorage
+      localStorage.clear();
+
+      // Mostrar una notificación al usuario
+      showNotification('La aplicación ha sido restablecida.');
+
+      // Recargar la página para volver al estado inicial
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Esperar 2 segundos antes de recargar
+    }
+
+    // Cargar datos desde LocalStorage
+    function loadFromLocalStorage() {
+      const storedBooks = localStorage.getItem('booksData');
+      const storedWeeklyProgress = localStorage.getItem('weeklyProgress');
+      const storedMonthlyProgress = localStorage.getItem('monthlyProgress');
+
+      if (storedBooks) {
+        booksData = JSON.parse(storedBooks);
+        // Rellenar el selector de libros con los libros guardados
+        Object.keys(booksData).forEach(bookTitle => {
+          const option = document.createElement('option');
+          option.value = bookTitle;
+          option.textContent = bookTitle;
+          bookSelector.appendChild(option);
+        });
+      }
+
+      if (storedWeeklyProgress) {
+        weeklyProgress = parseFloat(storedWeeklyProgress);
+        weeklyProgressElement.textContent = weeklyProgress.toFixed(2);
+      }
+
+      if (storedMonthlyProgress) {
+        monthlyProgress = parseFloat(storedMonthlyProgress);
+        monthlyProgressElement.textContent = monthlyProgress.toFixed(2);
+      }
+
+      // Mostrar sesiones del libro seleccionado al cargar
+      if (bookSelector.value) {
+        selectedBook = bookSelector.value;
+        showBookSessions(selectedBook);
+      }
+    }
+
+    function copyNoteToClipboard(bookTitle, bookAuthor, bookNote) {
+      const textToCopy = `Libro: ${bookTitle}\nAutor: ${bookAuthor}\nNota: ${bookNote}`;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showNotification('Texto copiado al portapapeles.');
+      }).catch(err => {
+        showNotification('Error al copiar el texto.');
+      });
+    }
+
+    // Muestra una notificación (ya la tienes definida en el código)
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 100);
+
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 500);
+      }, 3000);
+    }
+
+  </script>
+
+</body>
+</html>
